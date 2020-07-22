@@ -1,8 +1,17 @@
 {
-  "compilerOptions": {
-    "outDir": "./dist",
-    "allowJs": true,
-    "target": "es5"
-  },
-  "include": ["./src/**/*"]
+    "compilerOptions": {
+        "baseUrl": ".",
+        "lib": ["es2016"],
+        "paths": {
+            "*": ["src/*"]
+        },
+        "allowJs": true,
+        "target": "es2016",
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "sourceMap": true,
+        "outDir": "./dist"
+    },
+    "include": ["./src/**/*.ts"],
+    "exclude": ["node_modules"]
 }

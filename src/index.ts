@@ -1,16 +1,15 @@
+'use strict'
+
 import debug from 'debug'
-const log = debug('app:user')
+const log = debug('fastify:')
 
-module.exports = {
-  getRoot
-}
+import { FastifyInstance, FastifyPluginOptions, FastifyRequest, FastifyReply } from 'fastify'
 
-async function getRoot (httpRequest) {
-  log('httpRequest:', httpRequest)
-  return {
-    code: 200,
-    body: {
-      this: 'is root'
-    }
-  }
+export default async function (fastify: FastifyInstance, opts) {
+    // connect db, etc
+    log('opts:', opts)
+    fastify.get('/', async (request: FastifyRequest, reply: FastifyReply) => {
+        log('GET /', request.body)
+        return reply.send({ ok: 1 })
+    })
 }
