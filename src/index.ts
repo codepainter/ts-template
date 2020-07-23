@@ -2,7 +2,7 @@
 
 import debug from 'debug'
 import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify'
-import callbackAdapters from './callback-adapters'
+import callbackAdapters from './utils/callback-adapters'
 
 const controller = callbackAdapters.fastify({ apiVersion: 'monolithic-f0.0.1' }).callback
 
@@ -21,7 +21,7 @@ function myController (httpRequest) {
 export default async function (fastify: FastifyInstance, opts: object | null) {
     // connect db, etc
     fastify.get('/', async (request: FastifyRequest, reply: FastifyReply) => {
-        log('GET /', request.body)
+        log('GET /')
         return reply.send({ ok: 1 })
     })
 
