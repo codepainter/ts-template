@@ -18,6 +18,7 @@
         "fastify-autoload": "^3.0.4",
         "fastify-cli": "^2.0.2",
         "fastify-plugin": "^2.0.1",
+        "module-alias": "^2.2.2",
         "pretty-bytes": "^5.3.0"
     },
     "devDependencies": {
@@ -38,5 +39,8 @@
         "plugins": [
             "@typescript-eslint/eslint-plugin"
         ]
+    },
+    "_moduleAliases": {
+        "@utils": "./dist/utils"
     }
 }

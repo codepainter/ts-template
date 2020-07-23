@@ -1,8 +1,10 @@
 'use strict'
 
+require('module-alias/register')
+
 import debug from 'debug'
 import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify'
-import callbackAdapters from './utils/callback-adapters'
+import callbackAdapters from '@utils/callback-adapters'
 
 const controller = callbackAdapters.fastify({ apiVersion: 'monolithic-f0.0.1' }).callback
 
