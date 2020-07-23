@@ -1,6 +1,12 @@
 import buildMakeFastifyCallback from './fastify'
 import bytes from 'bytes'
 
+const fastify = buildMakeFastifyCallback({ heapdiff, getDurationInMilliseconds })
+
+export default {
+    fastify
+}
+
 function heapdiff (byte: number): string {
     return bytes(Math.abs(process.memoryUsage().heapUsed - byte))
 }
@@ -12,9 +18,3 @@ function getDurationInMilliseconds (start: [number, number]): string {
 
     return ((diff[0] * NS_PER_SEC + diff[1]) / NS_TO_MS).toPrecision(2).toString() + 'ms'
 }
-
-const fastify = buildMakeFastifyCallback({ heapdiff, getDurationInMilliseconds })
-
-export default Object.freeze({
-    fastify
-})

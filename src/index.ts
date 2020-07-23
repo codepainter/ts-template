@@ -2,6 +2,8 @@
 
 import debug from 'debug'
 import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify'
+import callbackAdapters from './callback-adapters/index'
+const controller = callbackAdapters.fastify({ apiVersion: 'service-f0.0.1' })
 
 const log = debug('fastify:index')
 
