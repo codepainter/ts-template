@@ -4,8 +4,9 @@
         "lib": ["es2016"],
         "paths": {
             "*": ["src/*"]
+            // "@utils/*": ["utils/*"]
         },
-        "allowJs": true,
+        // "allowJs": true,
         "target": "es2016",
         "module": "commonjs",
         "moduleResolution": "node",

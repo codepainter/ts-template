@@ -1,13 +1,13 @@
 import debug from 'debug'
 import { FastifyRequest, FastifyReply } from 'fastify'
 
-const log = debug('helper:fastify')
+const log = debug('adapter:fastify')
 
-interface FastifyCallbackNamedParameters {
+interface CallbackParameters {
     apiVersion?: string
 }
 
-interface FastifyCustomResponse {
+interface ResponseParameters {
     lang?: string
     error?: object
     data?: object
@@ -15,9 +15,16 @@ interface FastifyCustomResponse {
     elapsedTime?: string | undefined
 }
 
-export default function buildMakeFastifyCallback ({ heapdiff, getDurationInMilliseconds }) {
-    return function makeFastifyCallback (opts: FastifyCallbackNamedParameters) {
-        const { apiVersion = 'service-f0.0.0' } = opts
+interface BuildDependencies {
+    heapdiff: CallableFunction
+    getDurationInMilliseconds: CallableFunction
+}
+
+export default function buildMakeFastifyCallback ({
+    heapdiff, //
+    getDurationInMilliseconds
+}: BuildDependencies) {
+    return function makeFastifyCallback ({ apiVersion = 'service-f0.0.0' }: CallbackParameters) {
         log('apiVersion:', apiVersion)
 
         return Object.freeze({
@@ -25,7 +32,7 @@ export default function buildMakeFastifyCallback ({ heapdiff, getDurationInMilli
         })
 
         function callback (controller) {
-            return async function (request: FastifyRequest, reply: FastifyReply) {
+            return async function fastifyCallback (request: FastifyRequest, reply: FastifyReply) {
                 const response = makeResponse(reply)
                 try {
                     const httpRequest = {
@@ -45,7 +52,7 @@ export default function buildMakeFastifyCallback ({ heapdiff, getDurationInMilli
 
                     const hrstart = process.hrtime()
                     const memstart = process.memoryUsage().heapUsed
-                    const httpResponse = await controller(httpRequest)
+                    const httpResponse = await controller(httpRequest) // call the controller with the httpRequest
                     const memoryUsage = heapdiff(memstart)
                     const elapsedTime = getDurationInMilliseconds(hrstart)
                     log('httpResponse:', httpResponse)
@@ -69,14 +76,14 @@ export default function buildMakeFastifyCallback ({ heapdiff, getDurationInMilli
             }
         }
 
-        function makeResponse (reply: FastifyReply) {
+        function makeResponse (reply: FastifyReply): CallableFunction {
             return function response ({
-                lang = 'en',
+                lang = 'en', //
                 error = {},
                 data = {},
                 memoryUsage = undefined,
                 elapsedTime = undefined
-            }: FastifyCustomResponse): void {
+            }: ResponseParameters): void {
                 reply
                     .code(200)
                     .header('Content-Type', 'application/json; charset=utf-8')

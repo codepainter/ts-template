@@ -1,5 +1,6 @@
+import * as prettyBytes from 'pretty-bytes'
+
 import buildMakeFastifyCallback from './fastify'
-import bytes from 'bytes'
 
 const fastify = buildMakeFastifyCallback({ heapdiff, getDurationInMilliseconds })
 
@@ -7,8 +8,8 @@ export default {
     fastify
 }
 
-function heapdiff (byte: number): string {
-    return bytes(Math.abs(process.memoryUsage().heapUsed - byte))
+function heapdiff (byte: number): string | number {
+    return prettyBytes(Math.abs(process.memoryUsage().heapUsed - byte), {})
 }
 
 function getDurationInMilliseconds (start: [number, number]): string {
