@@ -1,11 +1,11 @@
 'use strict'
 
 import debug from 'debug'
-const log = debug('fastify:')
+import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify'
 
-import { FastifyInstance, FastifyPluginOptions, FastifyRequest, FastifyReply } from 'fastify'
+const log = debug('fastify:index')
 
-export default async function (fastify: FastifyInstance, opts) {
+export default async function (fastify: FastifyInstance, opts: object | null) {
     // connect db, etc
     log('opts:', opts)
     fastify.get('/', async (request: FastifyRequest, reply: FastifyReply) => {
