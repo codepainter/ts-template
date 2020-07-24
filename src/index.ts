@@ -1,5 +1,3 @@
-'use strict'
-
 require('module-alias/register')
 
 import debug from 'debug'
@@ -10,7 +8,11 @@ const controller = callbackAdapters.fastify({ apiVersion: 'monolithic-f0.0.1' })
 
 const log = debug('fastify:index')
 
-function myController (httpRequest) {
+interface IController {
+    statusCode: number
+    body: object | {}
+}
+function myController (httpRequest): IController {
     log('myController:', httpRequest)
     return {
         statusCode: 200,
@@ -20,11 +22,11 @@ function myController (httpRequest) {
     }
 }
 
-export default async function (fastify: FastifyInstance, opts: object | null) {
+export default async function (fastify: FastifyInstance, opts: object = {}) {
     // connect db, etc
-    fastify.get('/', async (request: FastifyRequest, reply: FastifyReply) => {
+    fastify.get('/', async function getRootHandler (request: FastifyRequest, reply: FastifyReply): Promise<any> {
         log('GET /')
-        return reply.send({ ok: 1 })
+        reply.send({ ok: 1 })
     })
 
     fastify.get('/controller', controller(myController))

@@ -1,14 +1,15 @@
 import * as prettyBytes from 'pretty-bytes'
+import { v4 as uuidv4 } from 'uuid'
 
 import buildMakeFastifyCallback from './fastify'
 
-const fastify = buildMakeFastifyCallback({ heapdiff, getDurationInMilliseconds })
+const fastify = buildMakeFastifyCallback({ heapdiff, getDurationInMilliseconds, uuidv4 })
 
 export default {
     fastify
 }
 
-function heapdiff (byte: number): string | number {
+function heapdiff (byte: number): string {
     return prettyBytes(Math.abs(process.memoryUsage().heapUsed - byte), {})
 }
 

@@ -3,11 +3,11 @@ import { FastifyRequest, FastifyReply } from 'fastify'
 
 const log = debug('adapter:fastify')
 
-interface CallbackParameters {
+interface ICallbackParameters {
     apiVersion?: string
 }
 
-interface ResponseParameters {
+interface IResponseParameters {
     lang?: string
     error?: object
     data?: object
@@ -15,37 +15,49 @@ interface ResponseParameters {
     elapsedTime?: string | undefined
 }
 
-interface BuildDependencies {
+interface IBuildDependencies {
     heapdiff: CallableFunction
     getDurationInMilliseconds: CallableFunction
+    uuidv4: CallableFunction
+}
+
+interface IHttpRequest {
+    query: any
+    body: any | null
+    params: object | {}
+    headers: object | {}
+    id: string
+    ip: string
+    hostname: string
 }
 
 export default function buildMakeFastifyCallback ({
     heapdiff, //
-    getDurationInMilliseconds
-}: BuildDependencies) {
-    return function makeFastifyCallback ({ apiVersion = 'service-f0.0.0' }: CallbackParameters) {
+    getDurationInMilliseconds,
+    uuidv4
+}: IBuildDependencies) {
+    return function makeFastifyCallback ({ apiVersion = 'service-f0.0.0' }: ICallbackParameters) {
         log('apiVersion:', apiVersion)
 
         return Object.freeze({
             callback
         })
 
-        function callback (controller) {
-            return async function fastifyCallback (request: FastifyRequest, reply: FastifyReply) {
+        function callback (controller: CallableFunction) {
+            return async function fastifyCallback (request: FastifyRequest, reply: FastifyReply): Promise<any> {
                 const response = makeResponse(reply)
                 try {
-                    const httpRequest = {
+                    const httpRequest: IHttpRequest = {
                         // user: request.user,
                         query: request.query,
                         body: request.body,
                         // files: request.files,
                         params: request.params,
                         headers: request.headers,
-                        id: request.id,
-                        log: request.log,
+                        id: uuidv4(),
+                        // log: request.log,
                         ip: request.ip,
-                        ips: request.ips,
+                        // ips: request.ips,
                         hostname: request.hostname
                     }
                     log('httpRequest:', httpRequest)
@@ -61,10 +73,10 @@ export default function buildMakeFastifyCallback ({
                         return response({ memoryUsage, elapsedTime, error: httpResponse })
                     }
 
-                    response({ memoryUsage, elapsedTime, data: httpResponse.body })
+                    return response({ memoryUsage, elapsedTime, data: httpResponse.body })
                 } catch (error) {
                     log('error:', error)
-                    response({
+                    return response({
                         memoryUsage: error.memoryUsage,
                         elapsedTime: error.elapsedTime,
                         error: {
@@ -83,7 +95,7 @@ export default function buildMakeFastifyCallback ({
                 data = {},
                 memoryUsage = undefined,
                 elapsedTime = undefined
-            }: ResponseParameters): void {
+            }: IResponseParameters): void {
                 reply
                     .code(200)
                     .header('Content-Type', 'application/json; charset=utf-8')
