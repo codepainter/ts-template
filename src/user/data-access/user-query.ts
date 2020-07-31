@@ -18,9 +18,10 @@ export default function makeUserQuery ({ User }: QueryDependencies) {
 
     interface QUserResult extends EUser {
         _id: Types.ObjectId
-        id: string
         createdAt: string
         updatedAt: string
+        __v: number
+        id: string
     }
 
     function deconstruct (obj: QUserResult): QUserResult {
@@ -29,18 +30,18 @@ export default function makeUserQuery ({ User }: QueryDependencies) {
         return { id: _id.toString(), ...info, _id }
     }
 
-    async function create (userInfo: DUser): Promise<QUserResult> {
+    async function create (userInfo: EUser): Promise<QUserResult> {
         log('create:', userInfo)
         const created = await User.create(userInfo)
         return deconstruct(created.toObject())
     }
 
-    interface IFindOneQuery {
+    interface QFindOne {
         _id?: string
         username?: string
     }
 
-    function findOne (query: IFindOneQuery): Query<QUserResult> {
+    function findOne (query: QFindOne): Query<QUserResult> {
         log('findOne:', query)
         return User.findOne(query).lean()
     }
