@@ -6,7 +6,8 @@ export enum Gender {
     Undisclosed = 'UNDISCLOSED'
 }
 
-export interface IUser {
+export interface makeUserParameters {
+    _id?: string | Types.ObjectId
     username: string
     email: string
     firstname: string
@@ -21,7 +22,7 @@ interface IBuildDependencies {
 }
 
 export default function buildMakeUser ({ validate }: IBuildDependencies): CallableFunction {
-    return function makeUser ({ username, email, firstname, lastname, gender }: IUser): Object {
+    return function makeUser ({ username, email, firstname, lastname, gender }: makeUserParameters): Object {
         if (!username) {
             throw new Error('Username needed')
         }

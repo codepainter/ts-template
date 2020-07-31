@@ -1,8 +1,6 @@
 import { Document, Model, model, Types, Schema, Query } from 'mongoose'
 
-import { IUser, Gender } from '../entity'
-
-export interface IUserDoc extends Document, IUser {}
+import { makeUserParameters, Gender } from '../entity'
 
 const schema: Schema = new Schema(
     {
@@ -18,4 +16,18 @@ const schema: Schema = new Schema(
     }
 )
 
-export default model<IUserDoc>('User', schema)
+// DO NOT export this
+interface IUserSchema extends Document {}
+
+// DO NOT export
+interface IUserBase extends IUserSchema {}
+
+// Export this for strong typing
+export interface IUser extends IUserBase {}
+
+// For model
+export interface IUserModel extends Model<IUser> {}
+
+export interface EUser extends makeUserParameters {}
+
+export default model<IUser, IUserModel>('User', schema)
