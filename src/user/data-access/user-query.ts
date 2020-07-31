@@ -2,10 +2,10 @@ import debug from 'debug'
 const log = debug('query:user')
 import { Types, Query, Model } from 'mongoose'
 
-import { IUser, IUserModel, EUser } from './user-model'
+import { DUser, DUserModel, EUser } from './user-model'
 
 interface QueryDependencies {
-    User: Model<IUser>
+    User: Model<DUser>
 }
 
 export default function userQuery ({ User }: QueryDependencies) {
@@ -15,18 +15,20 @@ export default function userQuery ({ User }: QueryDependencies) {
         findByUserId
     }
 
-    interface IUserExt extends EUser {
+    interface QUserResult extends EUser {
         _id: Types.ObjectId
-        id?: string
+        id: string
+        createdAt: string
+        updatedAt: string
     }
 
-    function deconstruct (obj: IUserExt): IUserExt {
+    function deconstruct (obj: QUserResult): QUserResult {
         const { _id, ...info } = obj
         log('deconstruct:', { _id, ...info })
         return { id: _id.toString(), ...info, _id }
     }
 
-    async function create (userInfo: IUser): Promise<IUserExt> {
+    async function create (userInfo: DUser): Promise<QUserResult> {
         log('create:', userInfo)
         const created = await User.create(userInfo)
         return deconstruct(created.toObject())
@@ -37,12 +39,12 @@ export default function userQuery ({ User }: QueryDependencies) {
         username?: string
     }
 
-    function findOne (query: IFindOneQuery): Query<IUserExt> {
+    function findOne (query: IFindOneQuery): Query<QUserResult> {
         log('findOne:', query)
         return User.findOne(query).lean()
     }
 
-    async function findByUserId ({ userId }: { userId: string }): Promise<IUserExt> {
+    async function findByUserId ({ userId }: { userId: string }): Promise<QUserResult> {
         log('findByUserId:', userId)
         const found = await findOne({ _id: userId })
         return deconstruct(found)

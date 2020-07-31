@@ -7,7 +7,6 @@ export enum Gender {
 }
 
 export interface makeUserParameters {
-    _id?: string | Types.ObjectId
     username: string
     email: string
     firstname: string

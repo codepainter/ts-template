@@ -23,11 +23,11 @@ interface IUserSchema extends Document {}
 interface IUserBase extends IUserSchema {}
 
 // Export this for strong typing
-export interface IUser extends IUserBase {}
+export interface DUser extends IUserBase {}
 
 // For model
-export interface IUserModel extends Model<IUser> {}
+export interface DUserModel extends Model<DUser> {}
 
 export interface EUser extends makeUserParameters {}
 
-export default model<IUser, IUserModel>('User', schema)
+export default model<DUser, DUserModel>('User', schema)
