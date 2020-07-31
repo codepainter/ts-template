@@ -1,15 +1,17 @@
-import User from './user'
+import validator from 'validator'
 
-function add (a, b) {
-  return a + b
-}
+import buildMakeUser, { IUser, Gender } from './user'
 
-function sub (a, b) {
-  return a - b
-}
+const validate = Object.freeze({
+    isEmail
+})
 
-export default User
-exports = {
-  add,
-  sub
+const makeUser = buildMakeUser({ validate })
+
+export default makeUser
+export { IUser, Gender }
+
+// FUNCTIONS
+function isEmail (email: string): boolean {
+    return validator.isEmail(email)
 }
