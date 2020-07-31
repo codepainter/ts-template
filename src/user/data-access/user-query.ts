@@ -1,18 +1,19 @@
 import debug from 'debug'
 const log = debug('query:user')
-import { Types, Query, Model } from 'mongoose'
 
-import { DUser, DUserModel, EUser } from './user-model'
+import { Types, Query, Model } from 'mongoose'
+import { DUser, DUserModel as _DUserModel, EUser } from './user-model'
 
 interface QueryDependencies {
     User: Model<DUser>
 }
 
-export default function userQuery ({ User }: QueryDependencies) {
+export default function makeUserQuery ({ User }: QueryDependencies) {
     log('User:', User)
     return {
         create,
-        findByUserId
+        findByUserId,
+        findByUsername
     }
 
     interface QUserResult extends EUser {
@@ -47,6 +48,12 @@ export default function userQuery ({ User }: QueryDependencies) {
     async function findByUserId ({ userId }: { userId: string }): Promise<QUserResult> {
         log('findByUserId:', userId)
         const found = await findOne({ _id: userId })
+        return deconstruct(found)
+    }
+
+    async function findByUsername ({ username }: { username: string }): Promise<QUserResult> {
+        log('findByUsername:', username)
+        const found = await findOne({ username })
         return deconstruct(found)
     }
 }

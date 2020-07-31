@@ -1,7 +1,6 @@
-import UserModel from './user-model'
-import UserQuery from './user-query'
+import User from './user-model'
+import makeUserQuery from './user-query'
 
-export default {
-    Model: UserModel, //
-    Query: UserQuery
-}
+const UserQuery = makeUserQuery({ User })
+
+export default UserQuery
