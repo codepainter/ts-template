@@ -4,18 +4,18 @@ import debug from 'debug'
 import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify'
 import callbackAdapters from '@utils/callback-adapters'
 
-const controller = callbackAdapters.fastify({ apiVersion: 'monolithic-f0.0.1' }).callback
-
 const log = debug('fastify:index')
 
+const controller = callbackAdapters.fastify({ apiVersion: 'monolithic-f0.0.1' }).callback
+
 interface IController {
-    statusCode: number
+    status: number
     body: object | {}
 }
 function myController (httpRequest): IController {
     log('myController:', httpRequest)
     return {
-        statusCode: 200,
+        status: 200,
         body: {
             this: 'is a controller'
         }

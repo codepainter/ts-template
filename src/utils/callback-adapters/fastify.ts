@@ -21,7 +21,7 @@ interface IBuildDependencies {
     uuidv4: CallableFunction
 }
 
-interface IHttpRequest {
+export interface IHttpRequest {
     query: any
     body: any | null
     params: object | {}

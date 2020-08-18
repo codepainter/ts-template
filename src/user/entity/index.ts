@@ -1,6 +1,6 @@
 import validator from 'validator'
 
-import buildMakeUser, { makeUserParameters, Gender } from './user'
+import buildMakeUser, { makeUserParameters, Gender, MakeUserObject } from './user'
 
 const validate = Object.freeze({
     isEmail
@@ -9,7 +9,7 @@ const validate = Object.freeze({
 const makeUser = buildMakeUser({ validate })
 
 export default makeUser
-export { makeUserParameters, Gender }
+export { makeUserParameters, Gender, MakeUserObject }
 
 // FUNCTIONS
 function isEmail (email: string): boolean {
